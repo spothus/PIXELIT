@@ -52,7 +52,7 @@
 #define CHECKUPDATESCREEN_INTERVAL 1000 * 60 * 5 // 5 Minutes
 #define CHECKUPDATESCREEN_DURATION 1000 * 5      // 5 Seconds
 
-#define VERSION "0.0.0-beta" // will be replaced by build script with tag!
+#define VERSION "0.0.0-beta"
 
 void FadeOut(int = 10, int = 0);
 void FadeIn(int = 10, int = 0);
@@ -87,11 +87,11 @@ const int MATRIX_PIN = D2;
 const int MATRIX_PIN = 27;
 #endif
 
-String dfpRXPin = "Pin_D7";
-String dfpTXPin = "Pin_D8";
-String onewirePin = "Pin_D1";
-String SCLPin = "Pin_D1";
-String SDAPin = "Pin_D3";
+String dfpRXPin = "dfpTXPin";
+String dfpTXPin = "dfpRXPin";
+String onewirePin = "onewirePin";
+String SCLPin = "SCLPin";
+String SDAPin = "SDAPin";
 String ldrDevice = "GL5516";
 unsigned long ldrPulldown = 10000; // 10k pulldown-resistor
 unsigned int ldrSmoothing = 0;
@@ -106,7 +106,7 @@ unsigned int ldrSmoothing = 0;
 #define CHECKUPDATE_SERVER_PATH "/api/lastversion"
 #define CHECKUPDATE_SERVER_PORT 80
 
-String btnPin[] = {"Pin_D0", "Pin_D4", "Pin_D5"};
+String btnPin[] = {"BtnPin_Left", "BtnPin_Middle", "BtnPin_Right"};
 bool btnEnabled[] = {false, false, false};
 int btnPressedLevel[] = {LOW, LOW, LOW};
 
@@ -3033,26 +3033,41 @@ LightDependentResistor::ePhotoCellKind TranslatePhotocell(String photocell)
 
 uint8_t TranslatePin(String pin)
 {
-    if (pin == "Pin_D0")
-        return D0;
-    if (pin == "Pin_D1")
-        return D1;
-    if (pin == "Pin_D2")
-        return D2;
-    if (pin == "Pin_D3")
-        return D3;
-    if (pin == "Pin_D4")
-        return D4;
-    if (pin == "Pin_D5")
-        return D5;
-    if (pin == "Pin_D6")
-        return D6;
-    if (pin == "Pin_D7")
-        return D7;
-    if (pin == "Pin_D8")
-        return D8;
-    if (pin == "Pin_27")
+    #ifdef ARDUINO_ESP32_DEV 
+    if (pin == "BtnPin_left")
+        return 4;
+    if (pin == "SCLPin")
+        return SCL;
+    if (pin == "MatrixPin")
         return 27;
+    if (pin == "SDAPin")
+        return SDA;
+    if (pin == "BtnPin_Middle")
+        return 2;
+    if (pin == "dfpRXPin")
+        return 16;
+    if (pin == "dfpTXPin")
+        return 17;
+    if (pin == "BtnPin_Right")
+        return 0;
+    #else
+     if (pin == "BtnPin_left")
+        return D0;
+    if (pin == "SCLPin")
+        return D1;
+    if (pin == "MatrixPin")
+        return D2;
+    if (pin == "SDAPin")
+        return D3;
+    if (pin == "BtnPin_Middle")
+        return D4;
+    if (pin == "dfpRXPin")
+        return D5;
+    if (pin == "dfpTXPin")
+        return D7;
+    if (pin == "BtnPin_Right")
+        return D8;
+    #endif
     Log(F("Pin-Zuordnung"), F("Unbekannter Pin"));
     return LED_BUILTIN;
 }

@@ -3,6 +3,7 @@ import os
 import re
 Import("env")
 
+
 SOURCECODE = "./src/PixelIt.ino"
 
 # Access to global construction environment
